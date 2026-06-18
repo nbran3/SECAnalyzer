@@ -1,9 +1,11 @@
 import os
 import re
 from glob import glob
+from bs4 import BeautifulSoup
+import os
+from markdownify import markdownify as md
 from pathlib import Path
-from azure.identity import ClientSecretCredential
-from azure.storage.blob import BlobServiceClient
+
 
 companies = [
     "Apple Inc.",
@@ -102,6 +104,8 @@ def process_all_filings(directory: str = ".") -> list[dict]:
         out_path.write_text(result["cleaned_content"], encoding="utf-8")
         print(f"  Saved → {out_path.name}\n")
         results.append(result)
+        os.remove(path)
+        print(f"  Deleted original file: {os.path.basename(path)}\n")
 
     print(f"Done. Processed {len(results)}/{len(htm_files)} files.")
     return results
